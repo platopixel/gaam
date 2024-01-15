@@ -4,13 +4,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import logo from './logo.svg';
 import { useViewport } from './useViewport';
 
-const X_ACCELERATION = 1.03;
-const Y_ACCELERATION = 1.02;
+const X_ACCELERATION = 1.022;
+const Y_ACCELERATION = 1.018;
 const MAX_VELOCITY = 4;
 
-export const Piece = () => {
+export const Piece = ({ x, y }) => {
     const [shake, setShake] = useState(false);
-    const [style, setStyle] = useState({ left: 2, top: 2 });
+    const [style, setStyle] = useState({ left: x, top: y });
     const imageRef = useRef(null);
     const requestRef = useRef(null);
     const previousTimeRef = useRef(null);
@@ -21,7 +21,7 @@ export const Piece = () => {
         const currentLeft = style?.left;
         const currentTop = style?.top;
         if (currentLeft > viewportWidth || currentTop > viewportHeight) {
-            setStyle({ left: 2, top: 2 })
+            setStyle({ left: x, top: y })
         } else {
             if ((currentLeft * X_ACCELERATION) - currentLeft >= MAX_VELOCITY) {
                 setStyle({ left: currentLeft + MAX_VELOCITY, top: currentTop * Y_ACCELERATION });
@@ -29,7 +29,7 @@ export const Piece = () => {
                 setStyle({ left: currentLeft * X_ACCELERATION, top: currentTop * Y_ACCELERATION });
             }
         }
-    }, [style]);
+    }, [style, viewportHeight, viewportWidth, x, y]);
     
     const animate = useCallback((time) => {
         if (previousTimeRef.current !== undefined) {
